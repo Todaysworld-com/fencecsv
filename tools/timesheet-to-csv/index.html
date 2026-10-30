@@ -7,7 +7,7 @@
 <meta name="description" content="Turn timesheet PDFs into spreadsheet rows — dates, hours, tasks — entirely in your browser. No upload, no signup, preview before you download.">
 <link rel="canonical" href="https://todaysworld-com.github.io/fencecsv/tools/timesheet-to-csv/">
 <link rel="stylesheet" href="../../assets/style.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Timesheet to Spreadsheet \u2014 Free In-Browser Extraction", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Will it total my hours?", "acceptedAnswer": {"@type": "Answer", "text": "The CSV carries hours as real numbers, so your spreadsheet totals them with one SUM. The tool itself transcribes; it does not silently adjust any figure."}}, {"@type": "Question", "name": "What kinds of timesheets work?", "acceptedAnswer": {"@type": "Answer", "text": "Any timesheet PDF with a real text layer \u2014 the kind produced by payroll and agency software. Scanned or handwritten timesheets need OCR, which the free tool does not do yet, and it will tell you that plainly."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Timesheet to Spreadsheet \u2014 Free In-Browser Extraction", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Will it total my hours?", "acceptedAnswer": {"@type": "Answer", "text": "The CSV carries hours as real numbers, so your spreadsheet totals them with one SUM. The tool itself transcribes; it does not silently adjust any figure."}}, {"@type": "Question", "name": "What kinds of timesheets work?", "acceptedAnswer": {"@type": "Answer", "text": "Any timesheet PDF with a real text layer \u2014 the kind produced by payroll and agency software. Scanned printed timesheets are read by in-browser OCR; handwritten timesheets still do not work, and the tool will tell you that plainly if OCR finds too little legible text."}}]}]}</script>
 <meta name="google-site-verification" content="7HTxDQkKj0hibEpX8A4tIA6RrGg51B8ZPK1O1UYT6ho" />
 </head>
 <body>
@@ -21,10 +21,10 @@
   <p class="privacy">🔒 <strong>Your file never leaves this device.</strong> This converter has no server — the document is read by your own browser and the data exists only in this tab. No upload, no signup, no copy kept anywhere.</p>
 
   <div id="fence-drop" role="button" tabindex="0">
-    <div class="big">Drop your timesheet PDF here, or click to choose a file</div>
-    <div class="small">PDF with a text layer, or a .txt export. Processed locally, instantly.</div>
+    <div class="big">Drop your timesheet PDF or image here, or click to choose a file</div>
+    <div class="small">PDF with a text layer, a scanned PDF, a photo/scan image (JPG/PNG — OCR runs in your browser), or a .txt export. Processed locally; text-layer PDFs are instant, OCR takes longer.</div>
   </div>
-  <input type="file" id="fence-file" accept=".pdf,.txt,.csv" hidden>
+  <input type="file" id="fence-file" accept=".pdf,.txt,.csv,.png,.jpg,.jpeg,.webp" hidden>
   <div class="row-btns">
     <button id="fence-sample-btn" type="button">▶ Try the sample invoice</button>
     <button class="secondary" id="fence-paste-toggle" type="button" onclick="document.getElementById('fence-pastebox').style.display='block'">Paste document text instead</button>
@@ -61,7 +61,7 @@
 
   <h2>Questions</h2>
   <dl class="faq"><dt>Will it total my hours?</dt><dd>The CSV carries hours as real numbers, so your spreadsheet totals them with one SUM. The tool itself transcribes; it does not silently adjust any figure.</dd>
-<dt>What kinds of timesheets work?</dt><dd>Any timesheet PDF with a real text layer — the kind produced by payroll and agency software. Scanned or handwritten timesheets need OCR, which the free tool does not do yet, and it will tell you that plainly.</dd></dl>
+<dt>What kinds of timesheets work?</dt><dd>Any timesheet PDF with a real text layer — the kind produced by payroll and agency software. Scanned printed timesheets are read by in-browser OCR; handwritten timesheets still do not work, and the tool will tell you that plainly if OCR finds too little legible text.</dd></dl>
 
   <h2>More free converters</h2>
   <div class="fleet"><a href="../../tools/invoice-to-csv/"><b>Invoice to CSV Converter</b><span>invoice → CSV, free</span></a>

@@ -7,7 +7,7 @@
 <meta name="description" content="Free invoice to CSV converter. Runs entirely in your browser: no upload, no signup. Extracts line items and cross-checks the totals, flagging mismatches instead of hiding them.">
 <link rel="canonical" href="https://todaysworld-com.github.io/fencecsv/tools/invoice-to-csv/">
 <link rel="stylesheet" href="../../assets/style.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Invoice to CSV Converter \u2014 Free, No Signup, Totals Verified", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is it really free? Do I need an account?", "acceptedAnswer": {"@type": "Answer", "text": "Yes and no. The converter runs in your browser, so there is no server cost to ration and no account to create. Convert as many single invoices as you like."}}, {"@type": "Question", "name": "What happens with scanned invoices?", "acceptedAnswer": {"@type": "Answer", "text": "This tool reads the PDF's text layer. A scanned invoice is a picture, so there is no text to read \u2014 the tool will tell you that honestly instead of returning garbage. Scanned or messy piles are what the Verified Batch service below exists for."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Invoice to CSV Converter \u2014 Free, No Signup, Totals Verified", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is it really free? Do I need an account?", "acceptedAnswer": {"@type": "Answer", "text": "Yes and no. The converter runs in your browser, so there is no server cost to ration and no account to create. Convert as many single invoices as you like."}}, {"@type": "Question", "name": "What happens with scanned invoices?", "acceptedAnswer": {"@type": "Answer", "text": "Yes \u2014 if a scanned invoice has no text layer, the tool now runs OCR in your own browser (nothing is uploaded) and extracts from the recognized text. OCR is slower and less exact than a text layer, so check the preview closely; the totals cross-check still flags disagreements. Big messy piles are still what the Verified Batch service below exists for."}}]}]}</script>
 <meta name="google-site-verification" content="7HTxDQkKj0hibEpX8A4tIA6RrGg51B8ZPK1O1UYT6ho" />
 </head>
 <body>
@@ -21,10 +21,10 @@
   <p class="privacy">🔒 <strong>Your file never leaves this device.</strong> This converter has no server — the document is read by your own browser and the data exists only in this tab. No upload, no signup, no copy kept anywhere.</p>
 
   <div id="fence-drop" role="button" tabindex="0">
-    <div class="big">Drop your invoice PDF here, or click to choose a file</div>
-    <div class="small">PDF with a text layer, or a .txt export. Processed locally, instantly.</div>
+    <div class="big">Drop your invoice PDF or image here, or click to choose a file</div>
+    <div class="small">PDF with a text layer, a scanned PDF, a photo/scan image (JPG/PNG — OCR runs in your browser), or a .txt export. Processed locally; text-layer PDFs are instant, OCR takes longer.</div>
   </div>
-  <input type="file" id="fence-file" accept=".pdf,.txt,.csv" hidden>
+  <input type="file" id="fence-file" accept=".pdf,.txt,.csv,.png,.jpg,.jpeg,.webp" hidden>
   <div class="row-btns">
     <button id="fence-sample-btn" type="button">▶ Try the sample invoice</button>
     <button class="secondary" id="fence-paste-toggle" type="button" onclick="document.getElementById('fence-pastebox').style.display='block'">Paste document text instead</button>
@@ -62,7 +62,7 @@
 
   <h2>Questions</h2>
   <dl class="faq"><dt>Is it really free? Do I need an account?</dt><dd>Yes and no. The converter runs in your browser, so there is no server cost to ration and no account to create. Convert as many single invoices as you like.</dd>
-<dt>What happens with scanned invoices?</dt><dd>This tool reads the PDF's text layer. A scanned invoice is a picture, so there is no text to read — the tool will tell you that honestly instead of returning garbage. Scanned or messy piles are what the Verified Batch service below exists for.</dd></dl>
+<dt>What happens with scanned invoices?</dt><dd>Yes — if a scanned invoice has no text layer, the tool now runs OCR in your own browser (nothing is uploaded) and extracts from the recognized text. OCR is slower and less exact than a text layer, so check the preview closely; the totals cross-check still flags disagreements. Big messy piles are still what the Verified Batch service below exists for.</dd></dl>
 
   <h2>More free converters</h2>
   <div class="fleet"><a href="../../tools/invoice-to-excel/"><b>Invoice PDF to Excel</b><span>invoice → Excel-ready CSV, free</span></a>

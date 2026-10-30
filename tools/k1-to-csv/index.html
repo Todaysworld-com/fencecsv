@@ -7,7 +7,7 @@
 <meta name="description" content="Extract Schedule K-1 fields into spreadsheet rows, entirely in your browser. A K-1 carries a full tax ID number — this tool is built so the file never leaves your device.">
 <link rel="canonical" href="https://todaysworld-com.github.io/fencecsv/tools/k1-to-csv/">
 <link rel="stylesheet" href="../../assets/style.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Schedule K-1 to Spreadsheet \u2014 Free In-Browser Extraction", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is any of this sent to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. The K-1 is read by your browser's own PDF engine. Nothing is transmitted, stored, or logged \u2014 close the tab and the data ceases to exist."}}, {"@type": "Question", "name": "Which K-1 forms work?", "acceptedAnswer": {"@type": "Answer", "text": "Any K-1 variant \u2014 partnership (1065), S-corp (1120-S) or estate/trust (1041) \u2014 issued as a text-layer PDF. Scanned K-1s need OCR and are not supported by the free tool; the Verified Batch service handles them under a last-4-only privacy rule."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Schedule K-1 to Spreadsheet \u2014 Free In-Browser Extraction", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is any of this sent to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. The K-1 is read by your browser's own PDF engine. Nothing is transmitted, stored, or logged \u2014 close the tab and the data ceases to exist."}}, {"@type": "Question", "name": "Which K-1 forms work?", "acceptedAnswer": {"@type": "Answer", "text": "Any K-1 variant \u2014 partnership (1065), S-corp (1120-S) or estate/trust (1041) \u2014 issued as a text-layer PDF. Scanned K-1s are read by in-browser OCR when there is no text layer, under a last-4-only privacy rule for tax IDs in anything you keep."}}]}]}</script>
 <meta name="google-site-verification" content="7HTxDQkKj0hibEpX8A4tIA6RrGg51B8ZPK1O1UYT6ho" />
 </head>
 <body>
@@ -21,10 +21,10 @@
   <p class="privacy">🔒 <strong>Your file never leaves this device.</strong> This converter has no server — the document is read by your own browser and the data exists only in this tab. No upload, no signup, no copy kept anywhere.</p>
 
   <div id="fence-drop" role="button" tabindex="0">
-    <div class="big">Drop your Schedule K-1 PDF here, or click to choose a file</div>
-    <div class="small">PDF with a text layer, or a .txt export. Processed locally, instantly.</div>
+    <div class="big">Drop your Schedule K-1 PDF or image here, or click to choose a file</div>
+    <div class="small">PDF with a text layer, a scanned PDF, a photo/scan image (JPG/PNG — OCR runs in your browser), or a .txt export. Processed locally; text-layer PDFs are instant, OCR takes longer.</div>
   </div>
-  <input type="file" id="fence-file" accept=".pdf,.txt,.csv" hidden>
+  <input type="file" id="fence-file" accept=".pdf,.txt,.csv,.png,.jpg,.jpeg,.webp" hidden>
   <div class="row-btns">
     <button id="fence-sample-btn" type="button">▶ Try the sample invoice</button>
     <button class="secondary" id="fence-paste-toggle" type="button" onclick="document.getElementById('fence-pastebox').style.display='block'">Paste document text instead</button>
@@ -61,7 +61,7 @@
 
   <h2>Questions</h2>
   <dl class="faq"><dt>Is any of this sent to a server?</dt><dd>No. The K-1 is read by your browser's own PDF engine. Nothing is transmitted, stored, or logged — close the tab and the data ceases to exist.</dd>
-<dt>Which K-1 forms work?</dt><dd>Any K-1 variant — partnership (1065), S-corp (1120-S) or estate/trust (1041) — issued as a text-layer PDF. Scanned K-1s need OCR and are not supported by the free tool; the Verified Batch service handles them under a last-4-only privacy rule.</dd></dl>
+<dt>Which K-1 forms work?</dt><dd>Any K-1 variant — partnership (1065), S-corp (1120-S) or estate/trust (1041) — issued as a text-layer PDF. Scanned K-1s are read by in-browser OCR when there is no text layer, under a last-4-only privacy rule for tax IDs in anything you keep.</dd></dl>
 
   <h2>More free converters</h2>
   <div class="fleet"><a href="../../tools/invoice-to-csv/"><b>Invoice to CSV Converter</b><span>invoice → CSV, free</span></a>

@@ -7,7 +7,7 @@
 <meta name="description" content="Free receipt converter producing the flat CSV layout QuickBooks imports cleanly. In-browser processing, no signup, totals verified before you import.">
 <link rel="canonical" href="https://todaysworld-com.github.io/fencecsv/tools/receipt-to-quickbooks/">
 <link rel="stylesheet" href="../../assets/style.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Receipt to QuickBooks CSV \u2014 Free Converter, Totals Checked", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Which QuickBooks versions import CSV?", "acceptedAnswer": {"@type": "Answer", "text": "QuickBooks Online imports CSV for expenses and bank data; QuickBooks Desktop imports via its own CSV utilities. The flat layout here is the common denominator for both."}}, {"@type": "Question", "name": "What about photographed or scanned receipts?", "acceptedAnswer": {"@type": "Answer", "text": "Those need OCR, which the free tool does not do yet \u2014 it will tell you honestly when a PDF has no text layer. Photographed receipt piles are exactly what the Verified Batch service below handles."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Receipt to QuickBooks CSV \u2014 Free Converter, Totals Checked", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Which QuickBooks versions import CSV?", "acceptedAnswer": {"@type": "Answer", "text": "QuickBooks Online imports CSV for expenses and bank data; QuickBooks Desktop imports via its own CSV utilities. The flat layout here is the common denominator for both."}}, {"@type": "Question", "name": "What about photographed or scanned receipts?", "acceptedAnswer": {"@type": "Answer", "text": "Those are now read by OCR that runs entirely in your browser \u2014 no upload \u2014 whether the receipt arrives as a scanned PDF or an image. Check the preview closely, since OCR is less exact than a text layer; large photographed piles are still exactly what the Verified Batch service below handles."}}]}]}</script>
 <meta name="google-site-verification" content="7HTxDQkKj0hibEpX8A4tIA6RrGg51B8ZPK1O1UYT6ho" />
 </head>
 <body>
@@ -21,10 +21,10 @@
   <p class="privacy">🔒 <strong>Your file never leaves this device.</strong> This converter has no server — the document is read by your own browser and the data exists only in this tab. No upload, no signup, no copy kept anywhere.</p>
 
   <div id="fence-drop" role="button" tabindex="0">
-    <div class="big">Drop your receipt PDF here, or click to choose a file</div>
-    <div class="small">PDF with a text layer, or a .txt export. Processed locally, instantly.</div>
+    <div class="big">Drop your receipt PDF or image here, or click to choose a file</div>
+    <div class="small">PDF with a text layer, a scanned PDF, a photo/scan image (JPG/PNG — OCR runs in your browser), or a .txt export. Processed locally; text-layer PDFs are instant, OCR takes longer.</div>
   </div>
-  <input type="file" id="fence-file" accept=".pdf,.txt,.csv" hidden>
+  <input type="file" id="fence-file" accept=".pdf,.txt,.csv,.png,.jpg,.jpeg,.webp" hidden>
   <div class="row-btns">
     <button id="fence-sample-btn" type="button">▶ Try the sample invoice</button>
     <button class="secondary" id="fence-paste-toggle" type="button" onclick="document.getElementById('fence-pastebox').style.display='block'">Paste document text instead</button>
@@ -61,7 +61,7 @@
 
   <h2>Questions</h2>
   <dl class="faq"><dt>Which QuickBooks versions import CSV?</dt><dd>QuickBooks Online imports CSV for expenses and bank data; QuickBooks Desktop imports via its own CSV utilities. The flat layout here is the common denominator for both.</dd>
-<dt>What about photographed or scanned receipts?</dt><dd>Those need OCR, which the free tool does not do yet — it will tell you honestly when a PDF has no text layer. Photographed receipt piles are exactly what the Verified Batch service below handles.</dd></dl>
+<dt>What about photographed or scanned receipts?</dt><dd>Those are now read by OCR that runs entirely in your browser — no upload — whether the receipt arrives as a scanned PDF or an image. Check the preview closely, since OCR is less exact than a text layer; large photographed piles are still exactly what the Verified Batch service below handles.</dd></dl>
 
   <h2>More free converters</h2>
   <div class="fleet"><a href="../../tools/invoice-to-csv/"><b>Invoice to CSV Converter</b><span>invoice → CSV, free</span></a>

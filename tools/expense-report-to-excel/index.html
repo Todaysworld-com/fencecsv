@@ -7,7 +7,7 @@
 <meta name="description" content="Turn expense report PDFs into Excel-ready spreadsheets, free and in your browser. Line items extracted, report total cross-checked, mismatches flagged.">
 <link rel="canonical" href="https://todaysworld-com.github.io/fencecsv/tools/expense-report-to-excel/">
 <link rel="stylesheet" href="../../assets/style.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Expense Report to Excel \u2014 Free Converter With a Totals Check", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Will it catch a report that doesn't add up?", "acceptedAnswer": {"@type": "Answer", "text": "That is the point of the verification pass: extracted lines are re-added and compared with the printed total, and a mismatch is written into the output with both figures. It flags arithmetic, not policy \u2014 whether an expense is allowable stays a human call."}}, {"@type": "Question", "name": "What about the receipts attached to the report?", "acceptedAnswer": {"@type": "Answer", "text": "Convert them with the sister receipt tools \u2014 they share the same column discipline, so report lines and receipt rows line up in one workbook. Scanned receipts are the Verified Batch service's job."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Expense Report to Excel \u2014 Free Converter With a Totals Check", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Will it catch a report that doesn't add up?", "acceptedAnswer": {"@type": "Answer", "text": "That is the point of the verification pass: extracted lines are re-added and compared with the printed total, and a mismatch is written into the output with both figures. It flags arithmetic, not policy \u2014 whether an expense is allowable stays a human call."}}, {"@type": "Question", "name": "What about the receipts attached to the report?", "acceptedAnswer": {"@type": "Answer", "text": "Convert them with the sister receipt tools \u2014 they share the same column discipline, so report lines and receipt rows line up in one workbook. Scanned receipts can be dropped into those tools too: they now run in-browser OCR, and big piles are still the Verified Batch service's job."}}]}]}</script>
 <meta name="google-site-verification" content="7HTxDQkKj0hibEpX8A4tIA6RrGg51B8ZPK1O1UYT6ho" />
 </head>
 <body>
@@ -21,10 +21,10 @@
   <p class="privacy">🔒 <strong>Your file never leaves this device.</strong> This converter has no server — the document is read by your own browser and the data exists only in this tab. No upload, no signup, no copy kept anywhere.</p>
 
   <div id="fence-drop" role="button" tabindex="0">
-    <div class="big">Drop your expense report PDF here, or click to choose a file</div>
-    <div class="small">PDF with a text layer, or a .txt export. Processed locally, instantly.</div>
+    <div class="big">Drop your expense report PDF or image here, or click to choose a file</div>
+    <div class="small">PDF with a text layer, a scanned PDF, a photo/scan image (JPG/PNG — OCR runs in your browser), or a .txt export. Processed locally; text-layer PDFs are instant, OCR takes longer.</div>
   </div>
-  <input type="file" id="fence-file" accept=".pdf,.txt,.csv" hidden>
+  <input type="file" id="fence-file" accept=".pdf,.txt,.csv,.png,.jpg,.jpeg,.webp" hidden>
   <div class="row-btns">
     <button id="fence-sample-btn" type="button">▶ Try the sample invoice</button>
     <button class="secondary" id="fence-paste-toggle" type="button" onclick="document.getElementById('fence-pastebox').style.display='block'">Paste document text instead</button>
@@ -61,7 +61,7 @@
 
   <h2>Questions</h2>
   <dl class="faq"><dt>Will it catch a report that doesn't add up?</dt><dd>That is the point of the verification pass: extracted lines are re-added and compared with the printed total, and a mismatch is written into the output with both figures. It flags arithmetic, not policy — whether an expense is allowable stays a human call.</dd>
-<dt>What about the receipts attached to the report?</dt><dd>Convert them with the sister receipt tools — they share the same column discipline, so report lines and receipt rows line up in one workbook. Scanned receipts are the Verified Batch service's job.</dd></dl>
+<dt>What about the receipts attached to the report?</dt><dd>Convert them with the sister receipt tools — they share the same column discipline, so report lines and receipt rows line up in one workbook. Scanned receipts can be dropped into those tools too: they now run in-browser OCR, and big piles are still the Verified Batch service's job.</dd></dl>
 
   <h2>More free converters</h2>
   <div class="fleet"><a href="../../tools/invoice-to-csv/"><b>Invoice to CSV Converter</b><span>invoice → CSV, free</span></a>

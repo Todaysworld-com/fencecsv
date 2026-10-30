@@ -7,7 +7,7 @@
 <meta name="description" content="Turn 1099 PDFs into Excel-ready spreadsheets, free and in your browser. No upload — tax documents never leave your device. ID numbers shown last-4 only.">
 <link rel="canonical" href="https://todaysworld-com.github.io/fencecsv/tools/1099-to-excel/">
 <link rel="stylesheet" href="../../assets/style.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "1099 to Excel \u2014 Free Converter, Sensitive Fields Fenced", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is it safe to use on a tax document?", "acceptedAnswer": {"@type": "Answer", "text": "The conversion happens on your own device \u2014 there is no server and no upload, and ID numbers are truncated to last-4 in the output. It is still your document: review the preview before you rely on any figure."}}, {"@type": "Question", "name": "Which 1099 variants work?", "acceptedAnswer": {"@type": "Answer", "text": "Any variant issued as a text-layer PDF (most software-issued 1099-NEC, -MISC and -INT forms qualify). Scanned paper forms need OCR; the tool detects that case and tells you honestly."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "1099 to Excel \u2014 Free Converter, Sensitive Fields Fenced", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is it safe to use on a tax document?", "acceptedAnswer": {"@type": "Answer", "text": "The conversion happens on your own device \u2014 there is no server and no upload, and ID numbers are truncated to last-4 in the output. It is still your document: review the preview before you rely on any figure."}}, {"@type": "Question", "name": "Which 1099 variants work?", "acceptedAnswer": {"@type": "Answer", "text": "Any variant issued as a text-layer PDF (most software-issued 1099-NEC, -MISC and -INT forms qualify). Scanned paper forms are read by in-browser OCR when there is no text layer; check the preview carefully \u2014 tax figures must be verified before you rely on them."}}]}]}</script>
 <meta name="google-site-verification" content="7HTxDQkKj0hibEpX8A4tIA6RrGg51B8ZPK1O1UYT6ho" />
 </head>
 <body>
@@ -21,10 +21,10 @@
   <p class="privacy">🔒 <strong>Your file never leaves this device.</strong> This converter has no server — the document is read by your own browser and the data exists only in this tab. No upload, no signup, no copy kept anywhere.</p>
 
   <div id="fence-drop" role="button" tabindex="0">
-    <div class="big">Drop your 1099 form PDF here, or click to choose a file</div>
-    <div class="small">PDF with a text layer, or a .txt export. Processed locally, instantly.</div>
+    <div class="big">Drop your 1099 form PDF or image here, or click to choose a file</div>
+    <div class="small">PDF with a text layer, a scanned PDF, a photo/scan image (JPG/PNG — OCR runs in your browser), or a .txt export. Processed locally; text-layer PDFs are instant, OCR takes longer.</div>
   </div>
-  <input type="file" id="fence-file" accept=".pdf,.txt,.csv" hidden>
+  <input type="file" id="fence-file" accept=".pdf,.txt,.csv,.png,.jpg,.jpeg,.webp" hidden>
   <div class="row-btns">
     <button id="fence-sample-btn" type="button">▶ Try the sample invoice</button>
     <button class="secondary" id="fence-paste-toggle" type="button" onclick="document.getElementById('fence-pastebox').style.display='block'">Paste document text instead</button>
@@ -61,7 +61,7 @@
 
   <h2>Questions</h2>
   <dl class="faq"><dt>Is it safe to use on a tax document?</dt><dd>The conversion happens on your own device — there is no server and no upload, and ID numbers are truncated to last-4 in the output. It is still your document: review the preview before you rely on any figure.</dd>
-<dt>Which 1099 variants work?</dt><dd>Any variant issued as a text-layer PDF (most software-issued 1099-NEC, -MISC and -INT forms qualify). Scanned paper forms need OCR; the tool detects that case and tells you honestly.</dd></dl>
+<dt>Which 1099 variants work?</dt><dd>Any variant issued as a text-layer PDF (most software-issued 1099-NEC, -MISC and -INT forms qualify). Scanned paper forms are read by in-browser OCR when there is no text layer; check the preview carefully — tax figures must be verified before you rely on them.</dd></dl>
 
   <h2>More free converters</h2>
   <div class="fleet"><a href="../../tools/invoice-to-csv/"><b>Invoice to CSV Converter</b><span>invoice → CSV, free</span></a>

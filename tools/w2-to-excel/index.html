@@ -7,7 +7,7 @@
 <meta name="description" content="Extract W-2 fields into an Excel-ready CSV, entirely in your browser. A W-2 carries a Social Security number — this tool is built so the file never leaves your device.">
 <link rel="canonical" href="https://todaysworld-com.github.io/fencecsv/tools/w2-to-excel/">
 <link rel="stylesheet" href="../../assets/style.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "W-2 to Excel \u2014 Free Text-Layer Extraction (Privacy-First)", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why CSV and not .xlsx?", "acceptedAnswer": {"@type": "Answer", "text": "CSV is the format Excel, Google Sheets and tax workpaper systems all import without conversion prompts. Open the CSV in Excel and Save As .xlsx if you need styling \u2014 thirty seconds, same data."}}, {"@type": "Question", "name": "Does it handle scanned W-2s?", "acceptedAnswer": {"@type": "Answer", "text": "No \u2014 scans need OCR. It extracts the text layer of digital W-2s, including payroll-provider PDFs, and tells you plainly when a file has no text layer. The Verified Batch service handles scans under a last-4-only privacy rule."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "W-2 to Excel \u2014 Free Text-Layer Extraction (Privacy-First)", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why CSV and not .xlsx?", "acceptedAnswer": {"@type": "Answer", "text": "CSV is the format Excel, Google Sheets and tax workpaper systems all import without conversion prompts. Open the CSV in Excel and Save As .xlsx if you need styling \u2014 thirty seconds, same data."}}, {"@type": "Question", "name": "Does it handle scanned W-2s?", "acceptedAnswer": {"@type": "Answer", "text": "Yes \u2014 scans are read by OCR running in your browser (no upload), and digital W-2s are extracted from their text layer, including payroll-provider PDFs. The tool tells you plainly when OCR finds too little legible text. Keep Social Security numbers last-4 only in the spreadsheet."}}]}]}</script>
 <meta name="google-site-verification" content="7HTxDQkKj0hibEpX8A4tIA6RrGg51B8ZPK1O1UYT6ho" />
 </head>
 <body>
@@ -21,10 +21,10 @@
   <p class="privacy">🔒 <strong>Your file never leaves this device.</strong> This converter has no server — the document is read by your own browser and the data exists only in this tab. No upload, no signup, no copy kept anywhere.</p>
 
   <div id="fence-drop" role="button" tabindex="0">
-    <div class="big">Drop your W-2 PDF here, or click to choose a file</div>
-    <div class="small">PDF with a text layer, or a .txt export. Processed locally, instantly.</div>
+    <div class="big">Drop your W-2 PDF or image here, or click to choose a file</div>
+    <div class="small">PDF with a text layer, a scanned PDF, a photo/scan image (JPG/PNG — OCR runs in your browser), or a .txt export. Processed locally; text-layer PDFs are instant, OCR takes longer.</div>
   </div>
-  <input type="file" id="fence-file" accept=".pdf,.txt,.csv" hidden>
+  <input type="file" id="fence-file" accept=".pdf,.txt,.csv,.png,.jpg,.jpeg,.webp" hidden>
   <div class="row-btns">
     <button id="fence-sample-btn" type="button">▶ Try the sample invoice</button>
     <button class="secondary" id="fence-paste-toggle" type="button" onclick="document.getElementById('fence-pastebox').style.display='block'">Paste document text instead</button>
@@ -61,7 +61,7 @@
 
   <h2>Questions</h2>
   <dl class="faq"><dt>Why CSV and not .xlsx?</dt><dd>CSV is the format Excel, Google Sheets and tax workpaper systems all import without conversion prompts. Open the CSV in Excel and Save As .xlsx if you need styling — thirty seconds, same data.</dd>
-<dt>Does it handle scanned W-2s?</dt><dd>No — scans need OCR. It extracts the text layer of digital W-2s, including payroll-provider PDFs, and tells you plainly when a file has no text layer. The Verified Batch service handles scans under a last-4-only privacy rule.</dd></dl>
+<dt>Does it handle scanned W-2s?</dt><dd>Yes — scans are read by OCR running in your browser (no upload), and digital W-2s are extracted from their text layer, including payroll-provider PDFs. The tool tells you plainly when OCR finds too little legible text. Keep Social Security numbers last-4 only in the spreadsheet.</dd></dl>
 
   <h2>More free converters</h2>
   <div class="fleet"><a href="../../tools/invoice-to-csv/"><b>Invoice to CSV Converter</b><span>invoice → CSV, free</span></a>

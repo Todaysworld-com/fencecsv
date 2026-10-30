@@ -7,7 +7,7 @@
 <meta name="description" content="Free utility bill converter: charges, usage and due dates into CSV, entirely in your browser. No upload, no signup, totals cross-checked against the bill.">
 <link rel="canonical" href="https://todaysworld-com.github.io/fencecsv/tools/utility-bill-to-csv/">
 <link rel="stylesheet" href="../../assets/style.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Utility Bill to CSV \u2014 Free, In-Browser, No Upload", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Which utilities does this work for?", "acceptedAnswer": {"@type": "Answer", "text": "Any bill issued as a digital PDF with a text layer \u2014 most electricity, gas, water and internet providers qualify. The extractor reads charge lines generically rather than assuming one provider's layout."}}, {"@type": "Question", "name": "What if my bill is a scanned paper copy?", "acceptedAnswer": {"@type": "Answer", "text": "Scans need OCR, which the free tool does not do yet. Your provider's online account almost always offers the same bill as a digital PDF, and that version will work here."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Utility Bill to CSV \u2014 Free, In-Browser, No Upload", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Which utilities does this work for?", "acceptedAnswer": {"@type": "Answer", "text": "Any bill issued as a digital PDF with a text layer \u2014 most electricity, gas, water and internet providers qualify. The extractor reads charge lines generically rather than assuming one provider's layout."}}, {"@type": "Question", "name": "What if my bill is a scanned paper copy?", "acceptedAnswer": {"@type": "Answer", "text": "Scans are now read by OCR that runs in your browser \u2014 nothing is uploaded \u2014 and the tool extracts the recognized charge lines. Your provider's online account almost always offers the same bill as a digital PDF, and that version remains the most reliable input here."}}]}]}</script>
 <meta name="google-site-verification" content="7HTxDQkKj0hibEpX8A4tIA6RrGg51B8ZPK1O1UYT6ho" />
 </head>
 <body>
@@ -21,10 +21,10 @@
   <p class="privacy">🔒 <strong>Your file never leaves this device.</strong> This converter has no server — the document is read by your own browser and the data exists only in this tab. No upload, no signup, no copy kept anywhere.</p>
 
   <div id="fence-drop" role="button" tabindex="0">
-    <div class="big">Drop your utility bill PDF here, or click to choose a file</div>
-    <div class="small">PDF with a text layer, or a .txt export. Processed locally, instantly.</div>
+    <div class="big">Drop your utility bill PDF or image here, or click to choose a file</div>
+    <div class="small">PDF with a text layer, a scanned PDF, a photo/scan image (JPG/PNG — OCR runs in your browser), or a .txt export. Processed locally; text-layer PDFs are instant, OCR takes longer.</div>
   </div>
-  <input type="file" id="fence-file" accept=".pdf,.txt,.csv" hidden>
+  <input type="file" id="fence-file" accept=".pdf,.txt,.csv,.png,.jpg,.jpeg,.webp" hidden>
   <div class="row-btns">
     <button id="fence-sample-btn" type="button">▶ Try the sample invoice</button>
     <button class="secondary" id="fence-paste-toggle" type="button" onclick="document.getElementById('fence-pastebox').style.display='block'">Paste document text instead</button>
@@ -61,7 +61,7 @@
 
   <h2>Questions</h2>
   <dl class="faq"><dt>Which utilities does this work for?</dt><dd>Any bill issued as a digital PDF with a text layer — most electricity, gas, water and internet providers qualify. The extractor reads charge lines generically rather than assuming one provider's layout.</dd>
-<dt>What if my bill is a scanned paper copy?</dt><dd>Scans need OCR, which the free tool does not do yet. Your provider's online account almost always offers the same bill as a digital PDF, and that version will work here.</dd></dl>
+<dt>What if my bill is a scanned paper copy?</dt><dd>Scans are now read by OCR that runs in your browser — nothing is uploaded — and the tool extracts the recognized charge lines. Your provider's online account almost always offers the same bill as a digital PDF, and that version remains the most reliable input here.</dd></dl>
 
   <h2>More free converters</h2>
   <div class="fleet"><a href="../../tools/invoice-to-csv/"><b>Invoice to CSV Converter</b><span>invoice → CSV, free</span></a>

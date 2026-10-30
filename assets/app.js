@@ -267,6 +267,76 @@
     });
   }
 
+  /* ---------------- OCR (Tesseract.js, CDN, lazy — v1.1 tranche 1) ----------------
+   * Runs only when a file has no usable text layer (scanned PDF) or is an image.
+   * Still 100% client-side: Tesseract.js executes in the visitor's browser and
+   * the image never leaves the device — the privacy architecture is unchanged.
+   * OCR text is fed to the SAME parsers and the SAME verification pass; the
+   * banner says OCR was used so the preview gets the extra check it deserves. */
+  var tesseractPromise = null;
+  function loadTesseract() {
+    if (window.Tesseract) return Promise.resolve(window.Tesseract);
+    if (tesseractPromise) return tesseractPromise;
+    tesseractPromise = new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.5/dist/tesseract.min.js';
+      s.onload = function () { window.Tesseract ? resolve(window.Tesseract) : reject(new Error('OCR engine loaded without its API')); };
+      s.onerror = function () { reject(new Error('the OCR engine could not be loaded (network required for the first OCR use)')); };
+      document.head.appendChild(s);
+    });
+    return tesseractPromise;
+  }
+  function ocrRecognize(source, label) {
+    return loadTesseract().then(function (T) {
+      return T.recognize(source, 'eng', {
+        logger: function (m) {
+          if (m && m.status === 'recognizing text') setStatus('OCR running in your browser on ' + label + ' — ' + Math.round((m.progress || 0) * 100) + '% …');
+        }
+      });
+    }).then(function (res) { return (res && res.data && res.data.text) || ''; });
+  }
+  function ocrImageFile(file) {
+    return ocrRecognize(file, file.name);
+  }
+  function ocrPdfFile(file) {
+    return import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/build/pdf.min.mjs').then(function (pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/build/pdf.worker.min.mjs';
+      return file.arrayBuffer().then(function (buf) { return pdfjsLib.getDocument({ data: buf }).promise; })
+        .then(function (pdf) {
+          var maxPages = Math.min(pdf.numPages, 10);
+          var chain = Promise.resolve([]);
+          var renderPage = function (p) {
+            return pdf.getPage(p).then(function (page) {
+              var viewport = page.getViewport({ scale: 2 });
+              var canvas = document.createElement('canvas');
+              canvas.width = viewport.width; canvas.height = viewport.height;
+              var ctx = canvas.getContext('2d');
+              return page.render({ canvas: canvas, canvasContext: ctx, viewport: viewport }).promise.then(function () { return canvas; });
+            }).then(function (canvas) {
+              return ocrRecognize(canvas, file.name + ' (page ' + p + ' of ' + maxPages + ')');
+            });
+          };
+          for (var p = 1; p <= maxPages; p++) {
+            (function (pageNo) {
+              chain = chain.then(function (texts) { return renderPage(pageNo).then(function (t) { texts.push(t); return texts; }); });
+            })(p);
+          }
+          return chain.then(function (texts) {
+            if (pdf.numPages > maxPages) texts.push('[OCR note: only the first ' + maxPages + ' pages were read — the free tool caps OCR at ' + maxPages + ' pages; the Verified Batch service below has no such cap.]');
+            return texts.join('\n');
+          });
+        });
+    });
+  }
+  function runOcrText(text, sourceName) {
+    var lines = String(text || '').split(/\r?\n/);
+    if (lines.join('').trim().length < 20) {
+      setStatus('OCR found too little legible text in ' + sourceName + '. A flatter, sharper, well-lit scan may work — or the Verified Batch service below can read it. Nothing was uploaded; the attempt happened entirely in your browser.', true);
+      return;
+    }
+    run(lines, sourceName + ' (via in-browser OCR — check the preview closely)');
+  }
+
   /* ---------------- output ---------------- */
   function csvEscape(v) {
     v = v === null || v === undefined ? '' : String(v);
@@ -311,7 +381,7 @@
       render(res);
       var chars = lines.join('').length;
       if (chars < 20) {
-        setStatus('This document produced almost no readable text. If it is a scanned/image PDF, the free tool cannot read it — see the options below the tool.', true);
+        setStatus('This document produced almost no readable text, even after the OCR attempt where one applies. See the options below the tool.', true);
       } else {
         setStatus('Done — ' + res.rows.length + ' rows extracted from ' + sourceName + ', entirely in your browser.');
       }
@@ -325,8 +395,16 @@
     setStatus('Reading ' + file.name + ' in your browser…');
     var name = file.name.toLowerCase();
     if (name.endsWith('.pdf')) {
-      readPdf(file).then(function (lines) { run(lines, file.name); })
-        .catch(function (e) { setStatus('Could not read that PDF (' + e.message + '). If it is a scanned image PDF, the free tool cannot extract it — the batch service below can.', true); });
+      readPdf(file).then(function (lines) {
+          if (lines.join('').trim().length >= 50) { run(lines, file.name); return; }
+          setStatus('No text layer in ' + file.name + ' — this looks like a scan, so OCR is running in your browser instead. Nothing is uploaded; OCR is slower than a text layer…');
+          return ocrPdfFile(file).then(function (text) { runOcrText(text, file.name); });
+        })
+        .catch(function (e) { setStatus('Could not read that PDF (' + e.message + '). The Verified Batch service below can handle files this tool cannot.', true); });
+    } else if (/\.(png|jpe?g|webp|gif|bmp|tiff?)$/.test(name)) {
+      setStatus('Reading ' + file.name + ' with OCR in your browser — nothing is uploaded; this takes a few seconds…');
+      ocrImageFile(file).then(function (text) { runOcrText(text, file.name); })
+        .catch(function (e) { setStatus('OCR could not read that image (' + e.message + '). A flatter, sharper photo may work — or the batch service below can.', true); });
     } else {
       file.text().then(function (t) { run(t.split(/\r?\n/), file.name); })
         .catch(function (e) { setStatus('Could not read that file: ' + e.message, true); });

@@ -7,7 +7,7 @@
 <meta name="description" content="Free bank statement converter: date, description, amount and balance rows as CSV. Runs 100% in your browser — a bank statement is the last file you should upload to a stranger's server.">
 <link rel="canonical" href="https://todaysworld-com.github.io/fencecsv/tools/bank-statement-to-csv/">
 <link rel="stylesheet" href="../../assets/style.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Bank Statement to CSV \u2014 Free, and the Statement Never Leaves Your Browser", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is my statement uploaded anywhere?", "acceptedAnswer": {"@type": "Answer", "text": "No. There is no server component to this tool \u2014 open your browser's network tab and convert a statement: the file is never transmitted. That is the whole design."}}, {"@type": "Question", "name": "My statement is a scanned image PDF. Now what?", "acceptedAnswer": {"@type": "Answer", "text": "Scans need OCR and are out of scope for the free tool. Your bank can almost always re-issue the statement as a digital PDF from online banking, which will work here."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Bank Statement to CSV \u2014 Free, and the Statement Never Leaves Your Browser", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is my statement uploaded anywhere?", "acceptedAnswer": {"@type": "Answer", "text": "No. There is no server component to this tool \u2014 open your browser's network tab and convert a statement: the file is never transmitted. That is the whole design."}}, {"@type": "Question", "name": "My statement is a scanned image PDF. Now what?", "acceptedAnswer": {"@type": "Answer", "text": "Drop it in anyway: when a statement PDF has no text layer, the tool runs OCR in your browser (nothing is uploaded) and extracts the recognized transactions. OCR is less exact than a digital statement, so check the preview \u2014 and your bank can almost always re-issue the statement as a digital PDF from online banking, which will work here cleanest."}}]}]}</script>
 <meta name="google-site-verification" content="7HTxDQkKj0hibEpX8A4tIA6RrGg51B8ZPK1O1UYT6ho" />
 </head>
 <body>
@@ -17,14 +17,14 @@
 </header>
 <main>
   <h1>Convert a bank statement PDF to CSV</h1>
-  <p class="lede">A bank statement is the most sensitive document most converters ask you to upload to their server. This one refuses to: the conversion runs entirely in your browser, so the statement never leaves your device. The output is the CSV your spreadsheet or accounting import wants — one row per transaction with date, description, amount and running balance where printed. Download statements from your bank as PDFs (the text kind, not scans), convert them here, and import without retyping a single line.</p>
+  <p class="lede">A bank statement is the most sensitive document most converters ask you to upload to their server. This one refuses to: the conversion runs entirely in your browser, so the statement never leaves your device. The output is the CSV your spreadsheet or accounting import wants — one row per transaction with date, description, amount and running balance where printed. Download statements from your bank as PDFs (the text kind works best; scans are read by in-browser OCR), convert them here, and import without retyping a single line.</p>
   <p class="privacy">🔒 <strong>Your file never leaves this device.</strong> This converter has no server — the document is read by your own browser and the data exists only in this tab. No upload, no signup, no copy kept anywhere.</p>
 
   <div id="fence-drop" role="button" tabindex="0">
-    <div class="big">Drop your bank statement PDF here, or click to choose a file</div>
-    <div class="small">PDF with a text layer, or a .txt export. Processed locally, instantly.</div>
+    <div class="big">Drop your bank statement PDF or image here, or click to choose a file</div>
+    <div class="small">PDF with a text layer, a scanned PDF, a photo/scan image (JPG/PNG — OCR runs in your browser), or a .txt export. Processed locally; text-layer PDFs are instant, OCR takes longer.</div>
   </div>
-  <input type="file" id="fence-file" accept=".pdf,.txt,.csv" hidden>
+  <input type="file" id="fence-file" accept=".pdf,.txt,.csv,.png,.jpg,.jpeg,.webp" hidden>
   <div class="row-btns">
     <button id="fence-sample-btn" type="button">▶ Try the sample invoice</button>
     <button class="secondary" id="fence-paste-toggle" type="button" onclick="document.getElementById('fence-pastebox').style.display='block'">Paste document text instead</button>
@@ -60,7 +60,7 @@
 
   <h2>Questions</h2>
   <dl class="faq"><dt>Is my statement uploaded anywhere?</dt><dd>No. There is no server component to this tool — open your browser's network tab and convert a statement: the file is never transmitted. That is the whole design.</dd>
-<dt>My statement is a scanned image PDF. Now what?</dt><dd>Scans need OCR and are out of scope for the free tool. Your bank can almost always re-issue the statement as a digital PDF from online banking, which will work here.</dd></dl>
+<dt>My statement is a scanned image PDF. Now what?</dt><dd>Drop it in anyway: when a statement PDF has no text layer, the tool runs OCR in your browser (nothing is uploaded) and extracts the recognized transactions. OCR is less exact than a digital statement, so check the preview — and your bank can almost always re-issue the statement as a digital PDF from online banking, which will work here cleanest.</dd></dl>
 
   <h2>More free converters</h2>
   <div class="fleet"><a href="../../tools/invoice-to-csv/"><b>Invoice to CSV Converter</b><span>invoice → CSV, free</span></a>

@@ -7,7 +7,7 @@
 <meta name="description" content="Free credit card statement converter: transactions, dates and amounts into CSV, entirely in your browser. Your statement is never uploaded to a server.">
 <link rel="canonical" href="https://todaysworld-com.github.io/fencecsv/tools/credit-card-statement-to-csv/">
 <link rel="stylesheet" href="../../assets/style.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Credit Card Statement to CSV \u2014 Free, In-Browser, No Upload", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is my statement uploaded anywhere?", "acceptedAnswer": {"@type": "Answer", "text": "No. There is no server component \u2014 the PDF is read by your own browser and the data exists only in your tab. Close the tab and it is gone."}}, {"@type": "Question", "name": "What if my statement is a scan or photo?", "acceptedAnswer": {"@type": "Answer", "text": "Scans need OCR, which the free tool does not do yet. Your issuer can almost always re-issue the statement as a digital PDF from online banking, and that version will work here."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Credit Card Statement to CSV \u2014 Free, In-Browser, No Upload", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is my statement uploaded anywhere?", "acceptedAnswer": {"@type": "Answer", "text": "No. There is no server component \u2014 the PDF is read by your own browser and the data exists only in your tab. Close the tab and it is gone."}}, {"@type": "Question", "name": "What if my statement is a scan or photo?", "acceptedAnswer": {"@type": "Answer", "text": "Scans and photos are now read by OCR that runs in your browser, with nothing uploaded. Your issuer can almost always re-issue the statement as a digital PDF from online banking, and that version will work here cleanest \u2014 use OCR for the copies where it can't."}}]}]}</script>
 <meta name="google-site-verification" content="7HTxDQkKj0hibEpX8A4tIA6RrGg51B8ZPK1O1UYT6ho" />
 </head>
 <body>
@@ -17,14 +17,14 @@
 </header>
 <main>
   <h1>Convert a credit card statement PDF to CSV</h1>
-  <p class="lede">A credit card statement holds the same rows as a bank statement — date, description, amount — plus interest and fees you need separated for expense and tax work. This converter extracts every transaction from a text-layer statement PDF into a clean CSV: dates normalized, amounts as signed numbers exactly as printed, ready for your spreadsheet or accounting import. It runs entirely in your browser, so a document full of purchase history never leaves your device. Download the statement as a PDF from your card issuer's site (the text kind, not a scan), convert it here, and stack months together — the column layout never changes.</p>
+  <p class="lede">A credit card statement holds the same rows as a bank statement — date, description, amount — plus interest and fees you need separated for expense and tax work. This converter extracts every transaction from a text-layer statement PDF into a clean CSV: dates normalized, amounts as signed numbers exactly as printed, ready for your spreadsheet or accounting import. It runs entirely in your browser, so a document full of purchase history never leaves your device. Download the statement as a PDF from your card issuer's site (the text kind works best; a scan is read by in-browser OCR), convert it here, and stack months together — the column layout never changes.</p>
   <p class="privacy">🔒 <strong>Your file never leaves this device.</strong> This converter has no server — the document is read by your own browser and the data exists only in this tab. No upload, no signup, no copy kept anywhere.</p>
 
   <div id="fence-drop" role="button" tabindex="0">
-    <div class="big">Drop your credit card statement PDF here, or click to choose a file</div>
-    <div class="small">PDF with a text layer, or a .txt export. Processed locally, instantly.</div>
+    <div class="big">Drop your credit card statement PDF or image here, or click to choose a file</div>
+    <div class="small">PDF with a text layer, a scanned PDF, a photo/scan image (JPG/PNG — OCR runs in your browser), or a .txt export. Processed locally; text-layer PDFs are instant, OCR takes longer.</div>
   </div>
-  <input type="file" id="fence-file" accept=".pdf,.txt,.csv" hidden>
+  <input type="file" id="fence-file" accept=".pdf,.txt,.csv,.png,.jpg,.jpeg,.webp" hidden>
   <div class="row-btns">
     <button id="fence-sample-btn" type="button">▶ Try the sample invoice</button>
     <button class="secondary" id="fence-paste-toggle" type="button" onclick="document.getElementById('fence-pastebox').style.display='block'">Paste document text instead</button>
@@ -61,7 +61,7 @@
 
   <h2>Questions</h2>
   <dl class="faq"><dt>Is my statement uploaded anywhere?</dt><dd>No. There is no server component — the PDF is read by your own browser and the data exists only in your tab. Close the tab and it is gone.</dd>
-<dt>What if my statement is a scan or photo?</dt><dd>Scans need OCR, which the free tool does not do yet. Your issuer can almost always re-issue the statement as a digital PDF from online banking, and that version will work here.</dd></dl>
+<dt>What if my statement is a scan or photo?</dt><dd>Scans and photos are now read by OCR that runs in your browser, with nothing uploaded. Your issuer can almost always re-issue the statement as a digital PDF from online banking, and that version will work here cleanest — use OCR for the copies where it can't.</dd></dl>
 
   <h2>More free converters</h2>
   <div class="fleet"><a href="../../tools/invoice-to-csv/"><b>Invoice to CSV Converter</b><span>invoice → CSV, free</span></a>
