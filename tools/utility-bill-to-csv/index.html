@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Utility Bill to CSV — Free, In-Browser, No Upload</title>
+<meta name="description" content="Free utility bill converter: charges, usage and due dates into CSV, entirely in your browser. No upload, no signup, totals cross-checked against the bill.">
+<link rel="canonical" href="https://todaysworld-com.github.io/fencecsv/tools/utility-bill-to-csv/">
+<link rel="stylesheet" href="../../assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Utility Bill to CSV \u2014 Free, In-Browser, No Upload", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Which utilities does this work for?", "acceptedAnswer": {"@type": "Answer", "text": "Any bill issued as a digital PDF with a text layer \u2014 most electricity, gas, water and internet providers qualify. The extractor reads charge lines generically rather than assuming one provider's layout."}}, {"@type": "Question", "name": "What if my bill is a scanned paper copy?", "acceptedAnswer": {"@type": "Answer", "text": "Scans need OCR, which the free tool does not do yet. Your provider's online account almost always offers the same bill as a digital PDF, and that version will work here."}}]}]}</script>
+<meta name="google-site-verification" content="7HTxDQkKj0hibEpX8A4tIA6RrGg51B8ZPK1O1UYT6ho" />
+</head>
+<body>
+<header class="site">
+  <div class="brand">Fence<span>CSV</span></div>
+  <nav><a href="../../">All converters</a><a href="https://payhip.com/getclosekit" rel="nofollow">Verified Batch service</a></nav>
+</header>
+<main>
+  <h1>Convert a utility bill PDF to CSV</h1>
+  <p class="lede">Utility bills are proof of address, expense records and budget data trapped in a PDF. This converter extracts a text-layer utility bill — electricity, gas, water, internet — into a clean CSV: service period, each charge line, taxes and fees as their own rows, and the total due as printed. It re-adds the charge lines and compares them with the bill's printed total before you download, flagging any disagreement instead of hiding it. The conversion runs entirely in your browser, so a bill carrying your name, address and account number is never uploaded to a server.</p>
+  <p class="privacy">🔒 <strong>Your file never leaves this device.</strong> This converter has no server — the document is read by your own browser and the data exists only in this tab. No upload, no signup, no copy kept anywhere.</p>
+
+  <div id="fence-drop" role="button" tabindex="0">
+    <div class="big">Drop your utility bill PDF here, or click to choose a file</div>
+    <div class="small">PDF with a text layer, or a .txt export. Processed locally, instantly.</div>
+  </div>
+  <input type="file" id="fence-file" accept=".pdf,.txt,.csv" hidden>
+  <div class="row-btns">
+    <button id="fence-sample-btn" type="button">▶ Try the sample invoice</button>
+    <button class="secondary" id="fence-paste-toggle" type="button" onclick="document.getElementById('fence-pastebox').style.display='block'">Paste document text instead</button>
+  </div>
+  <div id="fence-pastebox" style="display:none">
+    <textarea id="fence-paste" placeholder="Paste the document's text here (for example, select-all + copy from a PDF viewer)…"></textarea>
+    <div class="row-btns"><button id="fence-paste-btn" type="button">Extract rows from pasted text</button></div>
+  </div>
+  <div id="fence-status" class="status"></div>
+  <div id="fence-verify" class="verify"></div>
+  <div id="fence-tablewrap"></div>
+  <div id="fence-actions" style="display:none" class="row-btns">
+    <button id="fence-download" type="button">⬇ Download CSV</button>
+    <button class="secondary" id="fence-copy" type="button">Copy for Excel / Sheets</button>
+  </div>
+
+  <h2>What comes out</h2>
+  <ul class="fields"><li>Service period, account holder and bill date as printed</li>
+<li>One row per charge line: usage, rate and amount where shown</li>
+<li>Taxes and fees as their own rows, never buried in usage</li>
+<li>Total due carried exactly as printed</li>
+<li>Computed charges vs printed total, with any mismatch flagged</li></ul>
+  <p>Every conversion ends with a <strong>verification pass</strong>: the extracted line items are re-added and compared against the document's printed total. If they disagree, the output carries both figures and a written flag. Totals are never silently "fixed" — a discrepancy you can see is worth more than a clean-looking lie. Try the sample invoice above: its printed total is deliberately wrong by $9.00, and its invoice number is smudged. Watch what the tool does with both.</p>
+
+  <h2>When the free tool isn't enough</h2>
+  <div class="cta">
+    <p><strong>Verified Batch — your whole pile, done for you.</strong> Scanned PDFs, photographs, hundreds of files, or totals that must be checked by a second pass: send the batch and get back one consolidated spreadsheet with a written verification log — every total cross-checked, every discrepancy flagged with both figures, every illegible item listed instead of guessed. <span class="price">$19 per 25 documents.</span></p>
+    <p><a href="https://payhip.com/b/FT9yi" rel="nofollow">Order a Verified Batch →</a></p>
+  </div>
+  <div class="cta">
+    <p><strong>Bookfence — 18 AI Workflows for Bookkeepers &amp; Accountants — $29.</strong> Prefer to run extractions yourself, at volume, inside ChatGPT or Claude? This pack is the complete do-it-yourself workflow set built on the same never-invent-a-figure discipline as this converter.</p>
+    <p><a href="https://payhip.com/b/nwJbN" rel="nofollow">See the pack →</a></p>
+  </div>
+
+  <h2>Questions</h2>
+  <dl class="faq"><dt>Which utilities does this work for?</dt><dd>Any bill issued as a digital PDF with a text layer — most electricity, gas, water and internet providers qualify. The extractor reads charge lines generically rather than assuming one provider's layout.</dd>
+<dt>What if my bill is a scanned paper copy?</dt><dd>Scans need OCR, which the free tool does not do yet. Your provider's online account almost always offers the same bill as a digital PDF, and that version will work here.</dd></dl>
+
+  <h2>More free converters</h2>
+  <div class="fleet"><a href="../../tools/invoice-to-csv/"><b>Invoice to CSV Converter</b><span>invoice → CSV, free</span></a>
+<a href="../../tools/invoice-to-excel/"><b>Invoice PDF to Excel</b><span>invoice → Excel-ready CSV, free</span></a>
+<a href="../../tools/invoice-to-quickbooks/"><b>Invoice to QuickBooks CSV</b><span>invoice → QuickBooks-import CSV, free</span></a>
+<a href="../../tools/receipt-to-csv/"><b>Receipt to CSV Converter</b><span>receipt → CSV, free</span></a>
+<a href="../../tools/receipt-to-excel/"><b>Receipt to Excel</b><span>receipt → Excel-ready CSV, free</span></a>
+<a href="../../tools/bank-statement-to-csv/"><b>Bank Statement to CSV</b><span>bank statement → CSV, free</span></a>
+<a href="../../tools/bank-statement-to-excel/"><b>Bank Statement to Excel</b><span>bank statement → Excel-ready CSV, free</span></a>
+<a href="../../tools/w2-to-csv/"><b>W-2 to Spreadsheet</b><span>W-2 → CSV, free</span></a>
+<a href="../../tools/1099-to-csv/"><b>1099 to Spreadsheet</b><span>1099 → CSV, free</span></a>
+<a href="../../tools/purchase-order-to-csv/"><b>Purchase Order to CSV</b><span>purchase order → CSV, free</span></a>
+<a href="../../tools/pdf-to-csv/"><b>PDF to CSV Converter</b><span>PDF document → CSV, free</span></a>
+<a href="../../tools/expense-report-to-csv/"><b>Expense Receipts to Spreadsheet</b><span>expense receipts → CSV, free</span></a>
+<a href="../../tools/credit-card-statement-to-csv/"><b>Credit Card Statement to CSV</b><span>credit card statement → CSV, free</span></a>
+<a href="../../tools/pay-stub-to-csv/"><b>Pay Stub to Spreadsheet</b><span>pay stub → CSV, free</span></a>
+<a href="../../tools/delivery-note-to-csv/"><b>Delivery Note to CSV</b><span>delivery note → CSV, free</span></a>
+<a href="../../tools/timesheet-to-csv/"><b>Timesheet to Spreadsheet</b><span>timesheet → CSV, free</span></a>
+<a href="../../tools/k1-to-csv/"><b>Schedule K-1 to Spreadsheet</b><span>Schedule K-1 → CSV, free</span></a>
+<a href="../../tools/1099-nec-to-csv/"><b>1099-NEC to Spreadsheet</b><span>1099-NEC → CSV, free</span></a>
+<a href="../../tools/w2-to-excel/"><b>W-2 to Excel</b><span>W-2 → Excel-ready CSV, free</span></a>
+<a href="../../tools/bank-statement-to-quickbooks/"><b>Bank Statement to QuickBooks CSV</b><span>bank statement → QuickBooks-import CSV, free</span></a>
+<a href="../../tools/credit-card-statement-to-excel/"><b>Credit Card Statement to Excel</b><span>credit card statement → Excel-ready CSV, free</span></a>
+<a href="../../tools/bank-statement-to-xero/"><b>Bank Statement to Xero CSV</b><span>bank statement → Xero-import CSV, free</span></a>
+<a href="../../tools/invoice-to-xero/"><b>Invoice to Xero CSV</b><span>invoice → Xero-import CSV, free</span></a>
+<a href="../../tools/1099-to-excel/"><b>1099 to Excel</b><span>1099 form → Excel-ready CSV, free</span></a>
+<a href="../../tools/pay-stub-to-excel/"><b>Pay Stub to Excel</b><span>pay stub → Excel-ready CSV, free</span></a>
+<a href="../../tools/purchase-order-to-excel/"><b>Purchase Order to Excel</b><span>purchase order → Excel-ready CSV, free</span></a>
+<a href="../../tools/rent-receipt-to-csv/"><b>Rent Receipt to CSV</b><span>rent receipt → CSV, free</span></a>
+<a href="../../tools/expense-report-to-excel/"><b>Expense Report to Excel</b><span>expense report → Excel-ready CSV, free</span></a>
+<a href="../../tools/receipt-to-quickbooks/"><b>Receipt to QuickBooks CSV</b><span>receipt → QuickBooks-import CSV, free</span></a></div>
+</main>
+<footer class="site">FenceCSV — free document converters that check their own work. Files are processed locally in your browser; nothing is uploaded or stored.</footer>
+<script>window.FENCE = {"mode": "invoice", "doc": "utility bill"}; window.FENCE_SAMPLE = "ACME OFFICE SUPPLY CO.\nInvoice #: [smudged - illegible]\nDate: 2026-10-14\nBill To: Bluebonnet Bakery, Austin TX\n\nDescription            Qty   Unit Price   Amount\nPrinter paper A4        10       6.50      65.00\nToner cartridge          2      42.00      84.00\nBallpoint pens (box)     5       8.25      41.25\n\nSubtotal: 190.25\nTax (8.25%): 15.70\nShipping: 12.00\nTOTAL DUE: 226.95";</script>
+<script type="module" src="../../assets/app.js"></script>
+</body>
+</html>
