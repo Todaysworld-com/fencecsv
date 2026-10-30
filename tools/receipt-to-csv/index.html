@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Receipt to CSV Converter — Free, Private, In-Browser</title>
+<meta name="description" content="Free receipt-to-CSV converter for expense reports and bookkeeping. Runs in your browser — receipts are never uploaded. Extracts vendor, date, items and totals, with a totals check.">
+<link rel="canonical" href="https://todaysworld-com.github.io/fencecsv/tools/receipt-to-csv/">
+<link rel="stylesheet" href="../../assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Receipt to CSV Converter \u2014 Free, Private, In-Browser", "applicationCategory": "BusinessApplication", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can it read a photo of a paper receipt?", "acceptedAnswer": {"@type": "Answer", "text": "Not yet \u2014 photos and scans need OCR, which is on the roadmap. This tool handles digital receipts (PDFs with a text layer): the kind emailed by airlines, hotels, Amazon, and software vendors."}}, {"@type": "Question", "name": "What format do I get?", "acceptedAnswer": {"@type": "Answer", "text": "A CSV with one row per item and the receipt's header fields repeated on each row, so it filters and pivots cleanly in Excel, Sheets, or your accounting import."}}]}]}</script>
+</head>
+<body>
+<header class="site">
+  <div class="brand">Fence<span>CSV</span></div>
+  <nav><a href="../../">All converters</a><a href="https://payhip.com/getclosekit" rel="nofollow">Verified Batch service</a></nav>
+</header>
+<main>
+  <h1>Convert receipt PDFs to CSV for your expense records</h1>
+  <p class="lede">Emailed and exported receipts (the PDF kind from online orders, software subscriptions and travel bookings) convert to CSV here: vendor, date, each purchased item, tax, and the total — the rows your expense report or bookkeeping spreadsheet actually needs. Processing is entirely in your browser, which matters for receipts: they carry order numbers, addresses and payment fragments you may not want on a stranger's server. As with every tool on this site, the printed total is checked against the extracted lines and any mismatch is flagged, never smoothed over.</p>
+  <p class="privacy">🔒 <strong>Your file never leaves this device.</strong> This converter has no server — the document is read by your own browser and the data exists only in this tab. No upload, no signup, no copy kept anywhere.</p>
+
+  <div id="fence-drop" role="button" tabindex="0">
+    <div class="big">Drop your receipt PDF here, or click to choose a file</div>
+    <div class="small">PDF with a text layer, or a .txt export. Processed locally, instantly.</div>
+  </div>
+  <input type="file" id="fence-file" accept=".pdf,.txt,.csv" hidden>
+  <div class="row-btns">
+    <button id="fence-sample-btn" type="button">▶ Try the sample invoice</button>
+    <button class="secondary" id="fence-paste-toggle" type="button" onclick="document.getElementById('fence-pastebox').style.display='block'">Paste document text instead</button>
+  </div>
+  <div id="fence-pastebox" style="display:none">
+    <textarea id="fence-paste" placeholder="Paste the document's text here (for example, select-all + copy from a PDF viewer)…"></textarea>
+    <div class="row-btns"><button id="fence-paste-btn" type="button">Extract rows from pasted text</button></div>
+  </div>
+  <div id="fence-status" class="status"></div>
+  <div id="fence-verify" class="verify"></div>
+  <div id="fence-tablewrap"></div>
+  <div id="fence-actions" style="display:none" class="row-btns">
+    <button id="fence-download" type="button">⬇ Download CSV</button>
+    <button class="secondary" id="fence-copy" type="button">Copy for Excel / Sheets</button>
+  </div>
+
+  <h2>What comes out</h2>
+  <ul class="fields"><li>Vendor and date on every row</li>
+<li>Itemized lines where the receipt prints them</li>
+<li>Tax broken out as its own row when the receipt shows it</li>
+<li>Receipt/transaction number when printed, blank when not</li>
+<li>Total cross-checked against the lines</li></ul>
+  <p>Every conversion ends with a <strong>verification pass</strong>: the extracted line items are re-added and compared against the document's printed total. If they disagree, the output carries both figures and a written flag. Totals are never silently "fixed" — a discrepancy you can see is worth more than a clean-looking lie. Try the sample invoice above: its printed total is deliberately wrong by $9.00, and its invoice number is smudged. Watch what the tool does with both.</p>
+
+  <h2>When the free tool isn't enough</h2>
+  <div class="cta">
+    <p><strong>Verified Batch — your whole pile, done for you.</strong> Scanned PDFs, photographs, hundreds of files, or totals that must be checked by a second pass: send the batch and get back one consolidated spreadsheet with a written verification log — every total cross-checked, every discrepancy flagged with both figures, every illegible item listed instead of guessed. <span class="price">$19 per 25 documents.</span></p>
+    <p><a href="https://payhip.com/getclosekit" rel="nofollow">Order a Verified Batch →</a></p>
+  </div>
+  <div class="cta">
+    <p><strong>Bookfence — 18 AI Workflows for Bookkeepers &amp; Accountants — $29.</strong> Prefer to run extractions yourself, at volume, inside ChatGPT or Claude? This pack is the complete do-it-yourself workflow set built on the same never-invent-a-figure discipline as this converter.</p>
+    <p><a href="https://payhip.com/getclosekit" rel="nofollow">See the pack →</a></p>
+  </div>
+
+  <h2>Questions</h2>
+  <dl class="faq"><dt>Can it read a photo of a paper receipt?</dt><dd>Not yet — photos and scans need OCR, which is on the roadmap. This tool handles digital receipts (PDFs with a text layer): the kind emailed by airlines, hotels, Amazon, and software vendors.</dd>
+<dt>What format do I get?</dt><dd>A CSV with one row per item and the receipt's header fields repeated on each row, so it filters and pivots cleanly in Excel, Sheets, or your accounting import.</dd></dl>
+
+  <h2>More free converters</h2>
+  <div class="fleet"><a href="../../tools/invoice-to-csv/"><b>Invoice to CSV Converter</b><span>invoice → CSV, free</span></a>
+<a href="../../tools/invoice-to-excel/"><b>Invoice PDF to Excel</b><span>invoice → Excel-ready CSV, free</span></a>
+<a href="../../tools/invoice-to-quickbooks/"><b>Invoice to QuickBooks CSV</b><span>invoice → QuickBooks-import CSV, free</span></a>
+<a href="../../tools/receipt-to-excel/"><b>Receipt to Excel</b><span>receipt → Excel-ready CSV, free</span></a>
+<a href="../../tools/bank-statement-to-csv/"><b>Bank Statement to CSV</b><span>bank statement → CSV, free</span></a>
+<a href="../../tools/bank-statement-to-excel/"><b>Bank Statement to Excel</b><span>bank statement → Excel-ready CSV, free</span></a>
+<a href="../../tools/w2-to-csv/"><b>W-2 to Spreadsheet</b><span>W-2 → CSV, free</span></a>
+<a href="../../tools/1099-to-csv/"><b>1099 to Spreadsheet</b><span>1099 → CSV, free</span></a>
+<a href="../../tools/purchase-order-to-csv/"><b>Purchase Order to CSV</b><span>purchase order → CSV, free</span></a>
+<a href="../../tools/pdf-to-csv/"><b>PDF to CSV Converter</b><span>PDF document → CSV, free</span></a>
+<a href="../../tools/expense-report-to-csv/"><b>Expense Receipts to Spreadsheet</b><span>expense receipts → CSV, free</span></a></div>
+</main>
+<footer class="site">FenceCSV — free document converters that check their own work. Files are processed locally in your browser; nothing is uploaded or stored.</footer>
+<script>window.FENCE = {"mode": "invoice", "doc": "receipt"}; window.FENCE_SAMPLE = "ACME OFFICE SUPPLY CO.\nInvoice #: [smudged - illegible]\nDate: 2026-10-14\nBill To: Bluebonnet Bakery, Austin TX\n\nDescription            Qty   Unit Price   Amount\nPrinter paper A4        10       6.50      65.00\nToner cartridge          2      42.00      84.00\nBallpoint pens (box)     5       8.25      41.25\n\nSubtotal: 190.25\nTax (8.25%): 15.70\nShipping: 12.00\nTOTAL DUE: 226.95";</script>
+<script type="module" src="../../assets/app.js"></script>
+</body>
+</html>

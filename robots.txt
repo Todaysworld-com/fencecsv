@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://todaysworld-com.github.io/fencecsv/sitemap.xml
