@@ -558,6 +558,78 @@
     run(lines, sourceName + ' (via in-browser OCR — check the preview closely)');
   }
 
+  /* ---------------- QuickBooks / Xero output presets (v1.1 tranche 5) ----------------
+   * First-class output options, spec §8 item 5: the extraction itself is
+   * unchanged; a preset is a pure column map applied to the finished result —
+   * rename + reorder + drop into the import layout each platform documents
+   * (QuickBooks Online: invoice imports take InvoiceNo / Customer /
+   * InvoiceDate / DueDate / ItemAmount columns, bank imports take the
+   * 3-column Date / Description / Amount file; Xero: invoice imports take
+   * ContactName / InvoiceNumber / InvoiceDate / … / AccountCode / TaxType,
+   * bank statement imports take Date / Amount / Payee / Description /
+   * Reference). The fence rules bind here too: a field the document does
+   * not carry (a due date, a Xero account code, a statement payee) is left
+   * BLANK, never invented. The INVOICE TOTAL summary rows are dropped in
+   * the import presets because both platforms count every row as a line
+   * item — the verification banner still carries the totals verdict, and
+   * the Standard format keeps every row. Presets apply to the invoice and
+   * statement modes; tax and generic pages offer Standard only. */
+  var PRESETS = {
+    standard: { label: 'Standard — FenceCSV columns', suffix: '-extracted' },
+    quickbooks: { label: 'QuickBooks — import columns', suffix: '-quickbooks' },
+    xero: { label: 'Xero — import columns', suffix: '-xero' }
+  };
+  function presetAvailable(name) {
+    if (name === 'standard') return true;
+    return CFG.mode === 'invoice' || CFG.mode === 'statement';
+  }
+  function firstVal(r, keys) {
+    for (var i = 0; i < keys.length; i++) {
+      var v = r[keys[i]];
+      if (v !== undefined && v !== null && String(v) !== '') return v;
+    }
+    return '';
+  }
+  function applyPreset(res, name) {
+    if (!res || !name || name === 'standard' || !presetAvailable(name)) return res;
+    var spec;
+    if (CFG.mode === 'statement') {
+      spec = name === 'quickbooks'
+        ? [['Date', 'Date'], ['Description', 'Description'], ['Amount', 'Amount']]
+        : [['Date', 'Date'], ['Amount', 'Amount'], ['Payee', ''], ['Description', 'Description'], ['Reference', '']];
+    } else if (name === 'quickbooks') {
+      spec = [['InvoiceNo', 'Invoice_No'], ['Customer', 'Vendor'], ['InvoiceDate', 'Date'], ['DueDate', ''],
+        ['ItemDescription', 'Description'], ['ItemQuantity', 'Qty'], ['ItemRate', 'Unit_Price'],
+        ['ItemAmount', function (r) { return firstVal(r, ['Line_Total', 'Total']); }], ['TaxAmount', 'Tax'],
+        ['Currency', 'Currency'], ['Source_File', 'Source_File'], ['Notes', 'Notes']];
+    } else {
+      spec = [['ContactName', 'Vendor'], ['InvoiceNumber', 'Invoice_No'], ['InvoiceDate', 'Date'], ['DueDate', ''],
+        ['Description', 'Description'], ['Quantity', 'Qty'], ['UnitAmount', 'Unit_Price'],
+        ['LineAmount', function (r) { return firstVal(r, ['Line_Total', 'Total']); }], ['TaxAmount', 'Tax'],
+        ['AccountCode', ''], ['TaxType', ''], ['Currency', 'Currency'], ['Source_File', 'Source_File'], ['Notes', 'Notes']];
+    }
+    var headers = spec.map(function (s) { return s[0]; });
+    var rows = res.rows.filter(function (r) { return !/^INVOICE TOTAL/.test(r.Description || ''); }).map(function (r) {
+      var nr = {};
+      spec.forEach(function (s) {
+        nr[s[0]] = typeof s[1] === 'function' ? s[1](r) : (s[1] === '' ? '' : (r[s[1]] === undefined ? '' : r[s[1]]));
+      });
+      return nr;
+    });
+    return { headers: headers, rows: rows, verification: res.verification, preset: name };
+  }
+  function presetNoteText() {
+    if (!state.preset || state.preset === 'standard' || !presetAvailable(state.preset)) return '';
+    var name = state.preset === 'quickbooks' ? 'QuickBooks' : 'Xero';
+    var s = ' Output format: ' + name + ' import columns — renamed and reordered to the ' + name + ' layout in the preview and the download.';
+    if (CFG.mode === 'invoice') {
+      s += ' The INVOICE TOTAL summary rows are not in this format (both platforms count every row as a line item); the totals verdict above still stands. Fields the document does not carry (due date' + (state.preset === 'xero' ? ', account code, tax type' : '') + ') are left blank, never invented — fill in your own before importing.';
+    } else if (CFG.mode === 'statement') {
+      s += ' The balance and source columns are not in this format — ' + name + ' statement import takes date, amount and description' + (state.preset === 'xero' ? ', with Payee and Reference left blank because the statement parser does not extract them' : '') + '.';
+    }
+    return s;
+  }
+
   /* ---------------- output ---------------- */
   function csvEscape(v) {
     v = v === null || v === undefined ? '' : String(v);
@@ -572,7 +644,8 @@
   }
 
   /* ---------------- UI ---------------- */
-  var state = { result: null, fileName: 'document' };
+  var state = { result: null, fileName: 'document', preset: 'standard' };
+  function currentResult() { return state.result ? applyPreset(state.result, state.preset) : null; }
   function $(id) { return document.getElementById(id); }
   function setStatus(msg, isErr) {
     var el = $('fence-status');
@@ -584,7 +657,8 @@
     var v = $('fence-verify');
     v.style.display = 'block';
     v.className = 'verify ' + (res.verification.status === 'mismatch' ? 'warn' : res.verification.status === 'ok' ? 'ok' : 'info');
-    v.textContent = res.verification.message;
+    v.textContent = res.verification.message + presetNoteText();
+    res = currentResult();
     var wrap = $('fence-tablewrap');
     if (!res.rows.length) { wrap.innerHTML = '<p>No rows to show.</p>'; $('fence-actions').style.display = 'none'; return; }
     var html = '<table><thead><tr>' + res.headers.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead><tbody>';
@@ -632,7 +706,7 @@
     }
   }
 
-  if (typeof window !== 'undefined' && window.FENCE_TEST) { window.__fenceParse = parse; window.__fenceMerge = mergeResults; window.__fenceBatchMax = BATCH_MAX; }
+  if (typeof window !== 'undefined' && window.FENCE_TEST) { window.__fenceParse = parse; window.__fenceMerge = mergeResults; window.__fenceBatchMax = BATCH_MAX; window.__fencePreset = applyPreset; window.__fencePresetAvailable = presetAvailable; }
   document.addEventListener('DOMContentLoaded', function () {
     var drop = $('fence-drop'), input = $('fence-file');
     drop.addEventListener('click', function () { input.click(); });
@@ -648,19 +722,31 @@
     $('fence-sample-btn').addEventListener('click', function () {
       if (window.FENCE_SAMPLE) { setStatus('Sample invoice loaded — watch the verification banner: its printed total is wrong on purpose.'); run(window.FENCE_SAMPLE.split('\n'), 'sample-invoice.txt'); }
     });
+    var fmtSel = $('fence-format');
+    if (fmtSel) {
+      if (!presetAvailable('quickbooks')) {
+        Array.prototype.forEach.call(fmtSel.options, function (o) { if (o.value !== 'standard') { o.disabled = true; o.textContent += ' (invoice & statement pages only)'; } });
+      }
+      fmtSel.addEventListener('change', function () {
+        state.preset = fmtSel.value;
+        if (state.result) render(state.result);
+      });
+    }
     $('fence-download').addEventListener('click', function () {
       if (!state.result) return;
-      var blob = new Blob([toCSV(state.result)], { type: 'text/csv' });
+      var out = currentResult();
+      var blob = new Blob([toCSV(out)], { type: 'text/csv' });
       var a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = state.fileName.replace(/\.[^.]+$/, '') + '-extracted.csv';
+      a.download = state.fileName.replace(/\.[^.]+$/, '') + (PRESETS[state.preset] && presetAvailable(state.preset) ? PRESETS[state.preset].suffix : '-extracted') + '.csv';
       a.click();
       setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
     });
     $('fence-copy').addEventListener('click', function () {
       if (!state.result) return;
-      var tsv = state.result.headers.join('\t') + '\n' + state.result.rows.map(function (r) {
-        return state.result.headers.map(function (h) { return r[h] === undefined ? '' : r[h]; }).join('\t');
+      var out = currentResult();
+      var tsv = out.headers.join('\t') + '\n' + out.rows.map(function (r) {
+        return out.headers.map(function (h) { return r[h] === undefined ? '' : r[h]; }).join('\t');
       }).join('\n');
       navigator.clipboard.writeText(tsv).then(function () { setStatus('Copied as tab-separated rows — paste straight into Excel or Google Sheets.'); });
     });

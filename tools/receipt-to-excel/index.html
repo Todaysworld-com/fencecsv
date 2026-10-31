@@ -37,8 +37,16 @@
   <div id="fence-verify" class="verify"></div>
   <div id="fence-tablewrap"></div>
   <div id="fence-actions" style="display:none" class="row-btns">
+    <label>Output format:
+      <select id="fence-format">
+        <option value="standard">Standard — FenceCSV columns</option>
+        <option value="quickbooks">QuickBooks — import columns</option>
+        <option value="xero">Xero — import columns</option>
+      </select>
+    </label>
     <button id="fence-download" type="button">⬇ Download CSV</button>
     <button class="secondary" id="fence-copy" type="button">Copy for Excel / Sheets</button>
+    <p class="small">The QuickBooks and Xero formats rename and reorder the columns to each platform's documented import layout (invoice and statement pages). Fields a document doesn't carry — a due date, a Xero account code — are left blank, never invented, and the invoice-total summary rows stay in the Standard format only, because both platforms count every downloaded row as a line item.</p>
   </div>
 
   <h2>What comes out</h2>
