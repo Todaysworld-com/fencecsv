@@ -474,6 +474,81 @@
         });
     });
   }
+  /* ---------------- multi-file batch (v1.1 tranche 3) ----------------
+   * Free to 5 files, per spec §8 item 4: the files are read one at a time,
+   * entirely in the browser, parsed by the same page parser, and combined
+   * into ONE table/CSV (rows mapped onto the first file's columns by header
+   * name, each row still carrying its Source_File). Files past the cap are
+   * NOT read — the cap is named in the status line, and piles bigger than
+   * the cap are exactly what the paid Verified Batch below exists for.
+   * A file that fails never kills the batch: it is named and skipped. */
+  var BATCH_MAX = 5;
+  function extractLines(file) {
+    var name = file.name.toLowerCase();
+    if (name.endsWith('.pdf')) {
+      return readPdf(file).then(function (lines) {
+        if (lines.join('').trim().length >= 50) return { lines: lines, ocr: false };
+        return ocrPdfFile(file).then(function (text) { return { lines: String(text || '').split(/\r?\n/), ocr: true }; });
+      });
+    }
+    if (/\.(png|jpe?g|webp|gif|bmp|tiff?)$/.test(name)) {
+      return ocrImageFile(file).then(function (text) { return { lines: String(text || '').split(/\r?\n/), ocr: true }; });
+    }
+    return file.text().then(function (t) { return { lines: t.split(/\r?\n/), ocr: false }; });
+  }
+  function mergeResults(results) {
+    var headers = results[0].res.headers.slice();
+    var rows = [], msgs = [], dropped = {};
+    var anyMismatch = false, anyOk = false;
+    results.forEach(function (item) {
+      item.res.headers.forEach(function (h) { if (headers.indexOf(h) === -1) dropped[h] = 1; });
+      item.res.rows.forEach(function (r) {
+        var nr = {};
+        headers.forEach(function (h) { nr[h] = r[h] === undefined ? '' : r[h]; });
+        rows.push(nr);
+      });
+      msgs.push(item.source + ': ' + item.res.verification.message);
+      if (item.res.verification.status === 'mismatch') anyMismatch = true;
+      if (item.res.verification.status === 'ok') anyOk = true;
+    });
+    var message = (anyMismatch ? 'One or more files in this batch were FLAGGED by the verification pass — both figures are in the output, nothing was silently corrected. ' : '')
+      + 'Batch of ' + results.length + ' file' + (results.length > 1 ? 's' : '') + ' combined into one table (' + rows.length + ' rows). Per-file verification — ' + msgs.join(' · ');
+    var droppedNames = Object.keys(dropped);
+    if (droppedNames.length) message += ' Note: some files produced different columns (' + droppedNames.join(', ') + '), which were mapped onto the first file\'s columns and are not in this combined table — convert those files on their own to see them.';
+    return { headers: headers, rows: rows, verification: { status: anyMismatch ? 'mismatch' : (anyOk ? 'ok' : 'info'), message: message } };
+  }
+  function processFiles(fileList) {
+    var files = Array.prototype.slice.call(fileList || []);
+    if (!files.length) return;
+    if (files.length === 1) { handleFile(files[0]); return; }
+    var capped = files.slice(0, BATCH_MAX);
+    var extra = files.length - capped.length;
+    state.fileName = 'fencecsv-batch-of-' + capped.length;
+    setStatus('Reading ' + capped.length + ' files in your browser, one at a time…' + (extra > 0 ? ' You selected ' + files.length + ' files — the free tool combines up to ' + BATCH_MAX + ' at once, so ' + extra + ' will not be read; piles bigger than that are the Verified Batch service below.' : ''));
+    var results = [], failures = [];
+    var chain = Promise.resolve();
+    capped.forEach(function (file, idx) {
+      chain = chain.then(function () {
+        setStatus('Reading file ' + (idx + 1) + ' of ' + capped.length + ': ' + file.name + ' …');
+        return extractLines(file).then(function (ex) {
+          var src = file.name + (ex.ocr ? ' (via in-browser OCR — check the preview closely)' : '');
+          if (ex.lines.join('').trim().length < 20) { failures.push(file.name + ' (too little legible text)'); return; }
+          try { results.push({ res: parse(ex.lines, src), source: file.name }); }
+          catch (e) { failures.push(file.name + ' (' + e.message + ')'); }
+        }).catch(function (e) { failures.push(file.name + ' (' + e.message + ')'); });
+      });
+    });
+    chain.then(function () {
+      if (!results.length) {
+        setStatus('None of the ' + capped.length + ' files produced readable rows. ' + (failures.length ? 'Not read: ' + failures.join('; ') + '. ' : '') + 'Nothing was uploaded; every attempt happened in your browser.', true);
+        return;
+      }
+      var merged = mergeResults(results);
+      render(merged);
+      setStatus('Done — batch complete: ' + results.length + ' of ' + capped.length + ' files combined into ' + merged.rows.length + ' rows, entirely in your browser.' + (failures.length ? ' Not read: ' + failures.join('; ') + '.' : '') + (extra > 0 ? ' ' + extra + ' extra file(s) were not read — the free batch cap is ' + BATCH_MAX + '.' : ''));
+    });
+  }
+
   function runOcrText(text, sourceName) {
     var lines = String(text || '').split(/\r?\n/);
     if (lines.join('').trim().length < 20) {
@@ -557,14 +632,14 @@
     }
   }
 
-  if (typeof window !== 'undefined' && window.FENCE_TEST) { window.__fenceParse = parse; }
+  if (typeof window !== 'undefined' && window.FENCE_TEST) { window.__fenceParse = parse; window.__fenceMerge = mergeResults; window.__fenceBatchMax = BATCH_MAX; }
   document.addEventListener('DOMContentLoaded', function () {
     var drop = $('fence-drop'), input = $('fence-file');
     drop.addEventListener('click', function () { input.click(); });
-    input.addEventListener('change', function () { handleFile(input.files[0]); });
+    input.addEventListener('change', function () { processFiles(input.files); });
     ['dragover', 'dragenter'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); }); });
     ['dragleave', 'drop'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('over'); }); });
-    drop.addEventListener('drop', function (e) { handleFile(e.dataTransfer.files[0]); });
+    drop.addEventListener('drop', function (e) { processFiles(e.dataTransfer.files); });
     $('fence-paste-btn').addEventListener('click', function () {
       var t = $('fence-paste').value;
       if (t.trim().length) run(t.split(/\r?\n/), 'pasted-text');

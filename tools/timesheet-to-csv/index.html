@@ -21,10 +21,10 @@
   <p class="privacy">🔒 <strong>Your file never leaves this device.</strong> This converter has no server — the document is read by your own browser and the data exists only in this tab. No upload, no signup, no copy kept anywhere.</p>
 
   <div id="fence-drop" role="button" tabindex="0">
-    <div class="big">Drop your timesheet PDF or image here, or click to choose a file</div>
-    <div class="small">PDF with a text layer, a scanned PDF, a photo/scan image (JPG/PNG — OCR runs in your browser), or a .txt export. Processed locally; text-layer PDFs are instant, OCR takes longer.</div>
+    <div class="big">Drop your timesheet PDF or image here — or up to 5 files at once — or click to choose</div>
+    <div class="small">PDF with a text layer, a scanned PDF, a photo/scan image (JPG/PNG — OCR runs in your browser), or a .txt export. Processed locally; text-layer PDFs are instant, OCR takes longer. Free batch: up to 5 files are combined into one CSV in a single pass — bigger piles are the Verified Batch service below.</div>
   </div>
-  <input type="file" id="fence-file" accept=".pdf,.txt,.csv,.png,.jpg,.jpeg,.webp" hidden>
+  <input type="file" id="fence-file" accept=".pdf,.txt,.csv,.png,.jpg,.jpeg,.webp" multiple hidden>
   <div class="row-btns">
     <button id="fence-sample-btn" type="button">▶ Try the sample invoice</button>
     <button class="secondary" id="fence-paste-toggle" type="button" onclick="document.getElementById('fence-pastebox').style.display='block'">Paste document text instead</button>
