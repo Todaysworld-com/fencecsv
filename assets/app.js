@@ -172,6 +172,150 @@
     return { headers: ['Date', 'Description', 'Amount', 'Balance', 'Source_File'], rows: rows, verification: verification, fallbackGeneric: !rows.length };
   }
 
+  /* ---------------- field-tuned tax modes (v1.1 tranche 2) ----------------
+   * Column discipline is the fulfillment kit's Gig B spec, verbatim:
+   * one row per document; every box transcribed as printed; a box that is
+   * not legible is left blank and named in Notes — never invented.
+   * Privacy (hard rule): a personal SSN/TIN is NEVER emitted in full —
+   * last 4 only. Business EINs (employer / payer) are transcribed as the
+   * kit's columns specify; an SSN-format payer TIN is still cut to last 4. */
+  function boxVal(lines, res) {
+    for (var i = 0; i < lines.length; i++) {
+      for (var j = 0; j < res.length; j++) {
+        var m = lines[i].match(res[j]);
+        if (!m) continue;
+        var after = lines[i].slice(m.index + m[0].length);
+        var toks = moneyTokens(after);
+        if (toks.length) return toks[0].value;
+        if (i + 1 < lines.length && !/wages|withheld|tax|medicare|social security|compensation|rents|royalties|income/i.test(lines[i + 1])) {
+          var t2 = moneyTokens(lines[i + 1]);
+          if (t2.length) return t2[0].value;
+        }
+      }
+    }
+    return null;
+  }
+  function labelText(lines, re) {
+    for (var i = 0; i < lines.length; i++) {
+      var m = lines[i].match(re);
+      if (m) {
+        var rest = lines[i].slice(m.index + m[0].length).replace(/^[:\-\s]+/, '').trim();
+        if (rest.length >= 3 && !moneyTokens(rest).length) return rest;
+        for (var k = i + 1; k < Math.min(lines.length, i + 3); k++) {
+          var L = lines[k].trim();
+          if (L.length >= 3 && !moneyTokens(L).length && !/^(employer|employee|payer|recipient|name|address)/i.test(L)) return L;
+        }
+      }
+    }
+    return '';
+  }
+  function taxYear(text, formRe) {
+    var m = text.match(formRe);
+    if (m) return m[1];
+    m = text.match(/\b(20\d{2})\b/);
+    return m ? m[1] : '';
+  }
+  function ssnLast4(text) {
+    var m = text.match(/\b\d{3}-\d{2}-(\d{4})\b/) || text.match(/[X\*]{2,3}-[X\*]{2}-(\d{4})/i);
+    return m ? m[1] : '';
+  }
+  function firstEin(text) {
+    var m = text.match(/\b\d{2}-\d{7}\b/);
+    return m ? m[0] : '';
+  }
+
+  function parseW2(lines, sourceFile) {
+    var text = lines.join('\n');
+    var B = {
+      1: boxVal(lines, [/\b1\s+Wages,?\s+tips/i, /Wages,?\s+tips,?\s+other compensation/i]),
+      2: boxVal(lines, [/\b2\s+Federal income tax withheld/i, /Federal income tax withheld/i]),
+      3: boxVal(lines, [/\b3\s+Social security wages/i, /Social security wages/i]),
+      4: boxVal(lines, [/\b4\s+Social security tax withheld/i, /Social security tax withheld/i]),
+      5: boxVal(lines, [/\b5\s+Medicare wages and tips/i, /Medicare wages and tips/i]),
+      6: boxVal(lines, [/\b6\s+Medicare tax withheld/i, /Medicare tax withheld/i]),
+      16: boxVal(lines, [/\b16\s+State wages/i, /State wages,?\s+tips,?\s+etc\.?/i]),
+      17: boxVal(lines, [/\b17\s+State income tax/i, /State income tax/i])
+    };
+    var found = Object.keys(B).filter(function (k) { return B[k] !== null; });
+    if (!found.length) {
+      return { headers: [], rows: [], fallbackGeneric: true, verification: { status: 'no-items', message: 'No labeled W-2 boxes were detected in this document, so the generic table output is shown instead. The field-tuned W-2 parser needs the printed box labels (for example "1 Wages, tips, other compensation") — check the preview before downloading.' } };
+    }
+    var state = '';
+    var sm = text.match(/\b15\s+(?:Employer'?s\s+state\s+ID(?:\s+no\.?)?\s+)?([A-Z]{2})\b/) || text.match(/\bState\s+([A-Z]{2})\s+(?:\d{2}-\d{7}|state)/i);
+    if (sm) state = sm[1];
+    var missing = [1, 2, 3, 4, 5, 6, 16, 17].filter(function (k) { return B[k] === null; });
+    var notes = [];
+    if (missing.length) notes.push('MISSING: Box' + (missing.length > 1 ? 'es' : '') + ' ' + missing.join(', ') + ' not legible on the document — left blank, never invented.');
+    var flags = [];
+    if (B[3] !== null && B[4] !== null && B[3] <= 160000 && Math.abs(B[4] - 0.062 * B[3]) > 1.00) flags.push('Box 4 ($' + fmt(B[4]) + ') is not 6.2% of Box 3 ($' + fmt(B[3]) + ') as normally printed — flagged, not corrected.');
+    if (B[5] !== null && B[6] !== null && B[5] <= 200000 && Math.abs(B[6] - 0.0145 * B[5]) > 1.00) flags.push('Box 6 ($' + fmt(B[6]) + ') is not 1.45% of Box 5 ($' + fmt(B[5]) + ') as normally printed — flagged, not corrected.');
+    notes = notes.concat(flags);
+    var row = {
+      Tax_Year: taxYear(text, /Wage and Tax Statement\s*(20\d{2})/i) || taxYear(text, /Form\s+W-2\D{0,24}(20\d{2})/i),
+      Form: 'W-2',
+      Employer_Name: labelText(lines, /Employer'?s?\s+name/i) || labelText(lines, /Employer\s+name/i),
+      Employer_EIN: firstEin(text),
+      Employee_Name: labelText(lines, /Employee'?s?\s+name/i) || labelText(lines, /Employee\s+name/i),
+      SSN_Last4_Only: ssnLast4(text),
+      Wages_Box1: B[1] === null ? '' : fmt(B[1]), Fed_Withholding_Box2: B[2] === null ? '' : fmt(B[2]),
+      SS_Wages_Box3: B[3] === null ? '' : fmt(B[3]), SS_Tax_Box4: B[4] === null ? '' : fmt(B[4]),
+      Medicare_Wages_Box5: B[5] === null ? '' : fmt(B[5]), Medicare_Tax_Box6: B[6] === null ? '' : fmt(B[6]),
+      State: state, State_Wages_Box16: B[16] === null ? '' : fmt(B[16]), State_Withholding_Box17: B[17] === null ? '' : fmt(B[17]),
+      Source_File: sourceFile, Notes: notes.join(' ')
+    };
+    var verification = flags.length
+      ? { status: 'mismatch', message: '⚠ CROSS-CHECK FLAGGED on this W-2 — ' + flags.join(' ') + ' Both figures are in the output exactly as printed; nothing was silently corrected.' }
+      : { status: 'ok', message: '✓ W-2 extracted into the standard tax-prep columns (' + found.length + ' of 8 tracked boxes found' + (missing.length ? '; ' + missing.length + ' left blank and named in Notes' : '') + '). The Social Security number appears as last-4 only, by design. Preview every figure before you rely on it.' };
+    var headers = ['Tax_Year', 'Form', 'Employer_Name', 'Employer_EIN', 'Employee_Name', 'SSN_Last4_Only', 'Wages_Box1', 'Fed_Withholding_Box2', 'SS_Wages_Box3', 'SS_Tax_Box4', 'Medicare_Wages_Box5', 'Medicare_Tax_Box6', 'State', 'State_Wages_Box16', 'State_Withholding_Box17', 'Source_File', 'Notes'];
+    return { headers: headers, rows: [row], verification: verification, fallbackGeneric: false };
+  }
+
+  function parse1099(lines, sourceFile) {
+    var text = lines.join('\n');
+    var form = '1099', prefix = 'F1099';
+    var fm = text.match(/1099[-\s]?([A-Z]{1,4})\b/i);
+    if (fm && /^(NEC|MISC|INT|DIV|K|R|B|G|S|A)$/i.test(fm[1])) { form = '1099-' + fm[1].toUpperCase(); prefix = fm[1].toUpperCase(); }
+    var LABELS = [
+      [1, /Nonemployee compensation/i, 'Nonemployee compensation'], [1, /Rents\b/i, 'Rents'],
+      [2, /Royalties/i, 'Royalties'], [3, /Other income/i, 'Other income'],
+      [4, /Federal income tax withheld/i, 'Federal income tax withheld'],
+      [5, /State tax withheld/i, 'State tax withheld'], [6, /Medical and health care payments/i, 'Medical payments'],
+      [7, /State income/i, 'State income'], [10, /Gross proceeds paid to an attorney/i, 'Gross proceeds (attorney)'],
+      [1, /Interest income/i, 'Interest income'], [1, /Gross amount paid/i, 'Gross amount paid']
+    ];
+    var seen = {}, boxes = [];
+    LABELS.forEach(function (L) {
+      var v = boxVal(lines, [new RegExp('\\b' + L[0] + '\\s+' + L[1].source, 'i'), L[1]]);
+      if (v !== null && !seen[L[0] + ':' + L[2]]) { seen[L[0] + ':' + L[2]] = 1; boxes.push({ n: L[0], label: L[2], value: v }); }
+    });
+    if (!boxes.length) {
+      return { headers: [], rows: [], fallbackGeneric: true, verification: { status: 'no-items', message: 'No labeled 1099 boxes were detected in this document, so the generic table output is shown instead. The field-tuned 1099 parser needs the printed box labels (for example "1 Nonemployee compensation") — check the preview before downloading.' } };
+    }
+    boxes.sort(function (a, b) { return a.n - b.n; });
+    var keyBoxes = boxes.map(function (b) { return prefix + '_Box' + b.n + ' (' + b.label + ')=' + fmt(b.value); }).join('; ');
+    var ein = firstEin(text);
+    var payerTin = ein || ssnLast4(text);
+    var restText = ein ? text.replace(ein, '') : text;
+    var recipLast4 = ssnLast4(restText);
+    var notes = [];
+    if (ein) notes.push('Payer TIN transcribed as printed (business EIN).');
+    if (recipLast4) notes.push('Recipient TIN reduced to last 4 only — the full number is never typed into a spreadsheet.');
+    if (form === '1099-NEC' && !boxes.some(function (b) { return b.n === 1; })) notes.push('MISSING: Box 1 (nonemployee compensation) not legible on the document — left blank, never invented.');
+    var row = {
+      Tax_Year: taxYear(text, /Form\s+1099[-\s]?[A-Z]{0,4}\D{0,24}(20\d{2})/i),
+      Form: form,
+      Payer_Name: labelText(lines, /Payer'?s?\s+name/i),
+      Payer_TIN: payerTin,
+      Recipient_Name: labelText(lines, /Recipient'?s?\s+name/i),
+      TIN_Last4_Only: recipLast4,
+      Key_Amount_Boxes: keyBoxes,
+      Source_File: sourceFile, Notes: notes.join(' ')
+    };
+    var verification = { status: 'ok', message: '✓ ' + form + ' extracted into the standard tax-prep columns — ' + boxes.length + ' labeled box' + (boxes.length > 1 ? 'es' : '') + ' transcribed as printed, recipient TIN as last-4 only. Preview every figure before you rely on it.' };
+    var headers = ['Tax_Year', 'Form', 'Payer_Name', 'Payer_TIN', 'Recipient_Name', 'TIN_Last4_Only', 'Key_Amount_Boxes', 'Source_File', 'Notes'];
+    return { headers: headers, rows: [row], verification: verification, fallbackGeneric: false };
+  }
+
   /* ---------------- generic mode ---------------- */
   function parseGeneric(lines, sourceFile) {
     var cellRows = [], maxCols = 0;
@@ -207,6 +351,8 @@
     var clean = lines.map(function (l) { return l.replace(/\s+$/, ''); }).filter(function (l) { return l.trim().length; });
     var res;
     if (CFG.mode === 'statement') res = parseStatement(clean, sourceFile);
+    else if (CFG.mode === 'w2') res = parseW2(clean, sourceFile);
+    else if (CFG.mode === 'f1099') res = parse1099(clean, sourceFile);
     else if (CFG.mode === 'generic') res = parseGeneric(clean, sourceFile);
     else res = parseInvoice(clean, sourceFile);
     if (res.fallbackGeneric && CFG.mode !== 'generic') {
